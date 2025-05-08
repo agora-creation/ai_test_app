@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
       gemini.promptStream(
         parts: [Part.text(question)],
         generationConfig: GenerationConfig(
-          maxOutputTokens: 60,
+          maxOutputTokens: 30,
         ),
       ).listen((value) {
         ChatMessage? lastMessage = messages.firstOrNull;
