@@ -50,8 +50,13 @@ class _HomeScreenState extends State<HomeScreen> {
       messages = [chatMessage, ...messages];
     });
     try {
-      String question = chatMessage.text;
-      gemini.promptStream(parts: [Part.text(question)]).listen((value) {
+      String question = '一文で簡潔に、田舎のお母さんのような言葉で答えてください：${chatMessage.text}';
+      gemini.promptStream(
+        parts: [Part.text(question)],
+        generationConfig: GenerationConfig(
+          maxOutputTokens: 60,
+        ),
+      ).listen((value) {
         ChatMessage? lastMessage = messages.firstOrNull;
         if (lastMessage != null && lastMessage.user == geminiUser) {
           lastMessage = messages.removeAt(0);
