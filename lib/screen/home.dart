@@ -35,7 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
           messages: messages,
           inputOptions: InputOptions(
             inputDecoration: InputDecoration(
-              hintText: 'メッセージを入力してください...',
+              hintText: 'メッセージを入力できます...',
+              contentPadding: EdgeInsets.all(16),
+              border: InputBorder.none,
             ),
           ),
         ),
