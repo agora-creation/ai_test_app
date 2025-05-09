@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-const kBackgroundColor = Color(0xFFF8BBD0);
+const kBackgroundColor = Color(0xFFFCE4EC);
+const kMainColor = Color(0xFFF06292);
 const kWhiteColor = Color(0xFFFFFFFF);
 const kBlackColor = Color(0xFF333333);
-const kRedColor = Color(0xFFF44336);
-const kBlueColor = Color(0xFF2196F3);
-const kMsgBgColor = Color(0xFFF5F5F5);
 
 ThemeData customTheme() {
   return ThemeData(
@@ -25,23 +23,13 @@ ThemeData customTheme() {
       ),
       iconTheme: IconThemeData(
         color: kBlackColor,
-        size: 16,
+        size: 18,
       ),
     ),
     textTheme: const TextTheme(
-      bodyLarge: TextStyle(color: kBlackColor, fontSize: 16),
-      bodyMedium: TextStyle(color: kBlackColor, fontSize: 16),
-      bodySmall: TextStyle(color: kBlackColor, fontSize: 16),
-    ),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: kBlueColor,
-      elevation: 0,
-      extendedTextStyle: TextStyle(
-        color: kWhiteColor,
-        fontSize: 16,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'SourceHanSansJP-Bold',
-      ),
+      bodyLarge: TextStyle(color: kBlackColor, fontSize: 18),
+      bodyMedium: TextStyle(color: kBlackColor, fontSize: 18),
+      bodySmall: TextStyle(color: kBlackColor, fontSize: 18),
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     unselectedWidgetColor: kWhiteColor,
