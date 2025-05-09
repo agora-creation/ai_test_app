@@ -9,7 +9,7 @@ const kBlackColor = Color(0xFF333333);
 ThemeData customTheme() {
   return ThemeData(
     scaffoldBackgroundColor: kBackgroundColor,
-    fontFamily: 'SourceHanSansJP-Regular',
+    fontFamily: 'TekitouPoem_Bold',
     appBarTheme: const AppBarTheme(
       backgroundColor: kBackgroundColor,
       elevation: 0,
@@ -19,7 +19,7 @@ ThemeData customTheme() {
         color: kBlackColor,
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        fontFamily: 'SourceHanSansJP-Bold',
+        fontFamily: 'TekitouPoem_Bold',
       ),
       iconTheme: IconThemeData(
         color: kBlackColor,

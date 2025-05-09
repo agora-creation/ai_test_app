@@ -8,20 +8,12 @@ version: 1.0.0+1
 environment:
   sdk: ^3.6.2
 
-# Dependencies specify other packages that your package needs in order to work.
-# To automatically upgrade your package dependencies to the latest versions
-# consider running `flutter pub upgrade --major-versions`. Alternatively,
-# dependencies can be manually updated by changing the version numbers below to
-# the latest version available on pub.dev. To see which dependencies have newer
-# versions available, run `flutter pub outdated`.
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   font_awesome_flutter: ^10.8.0
   flutter_launcher_icons: ^0.14.3
@@ -47,9 +39,6 @@ flutter:
   uses-material-design: true
 
   fonts:
-    - family: SourceHanSansJP-Bold
+    - family: TekitouPoem_Bold
       fonts:
-        - asset: assets/fonts/SourceHanSansJP-Bold.otf
-    - family: SourceHanSansJP-Regular
-      fonts:
-        - asset: assets/fonts/SourceHanSansJP-Regular.otf
+        - asset: assets/fonts/TekitouPoem_Bold.ttf
