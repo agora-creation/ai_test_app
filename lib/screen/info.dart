@@ -61,7 +61,7 @@ class InfoScreen extends StatelessWidget {
                   snapshot.data ?? '',
                   style: TextStyle(
                     color: kBlackColor,
-                    fontSize: 14,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
                 );

@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _sendMessage(ChatMessage chatMessage) async {
+  void _sendMessage(ChatMessage chatMessage) {
     setState(() {
       messages = [chatMessage, ...messages];
     });
@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         generationConfig: GenerationConfig(
           maxOutputTokens: 30,
         ),
-      ).listen((value) {
+      ).listen((value) async {
         ChatMessage? lastMessage = messages.firstOrNull;
         if (lastMessage != null && lastMessage.user == geminiUser) {
           lastMessage = messages.removeAt(0);
@@ -91,11 +91,11 @@ class _HomeScreenState extends State<HomeScreen> {
             messages = [message, ...messages];
           });
         }
+        await _savePrefs(messages);
       });
     } catch (e) {
       print(e);
     }
-    await _savePrefs(messages);
   }
 
   void _init() async {

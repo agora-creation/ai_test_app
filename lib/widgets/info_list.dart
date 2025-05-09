@@ -26,7 +26,7 @@ class InfoList extends StatelessWidget {
       child: ListTile(
         title: Text(
           label,
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 18),
         ),
         trailing: trailing,
         onTap: onTap,
