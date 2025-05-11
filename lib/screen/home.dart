@@ -105,7 +105,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     _initBannerAd();
-    _init();
     super.initState();
   }
 

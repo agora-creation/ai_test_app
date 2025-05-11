@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +17,7 @@ Future main() async {
     statusBarIconBrightness: Brightness.dark,
   ));
   Gemini.init(apiKey: GEMINI_API_KEY);
+  await MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
