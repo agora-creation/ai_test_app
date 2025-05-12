@@ -31,11 +31,56 @@ class _HomeScreenState extends State<HomeScreen> {
   );
   List<ChatMessage> messages = [];
 
-  void _initBannerAd() async {
-    await bannerAd.load();
+  Future _loadMessage() async {
+    messages.clear();
+    final jsonString = await getPrefsString('chatList');
+    if (jsonString != null) {
+      List<dynamic> decodedList = jsonDecode(jsonString);
+      for (final data in decodedList) {
+        ChatMessage message = ChatMessage.fromJson(data);
+        messages.add(message);
+      }
+    }
+    setState(() {});
   }
 
-  Future _savePrefs(List<ChatMessage> messages) async {
+  void _sendMessage(ChatMessage chatMessage) {
+    setState(() {
+      messages = [chatMessage, ...messages];
+    });
+    String question = '一文で簡潔に、田舎のお母さんのような言葉で答えてください：${chatMessage.text}';
+    gemini.prompt(
+      parts: [Part.text(question)],
+      generationConfig: GenerationConfig(
+        maxOutputTokens: 30,
+      ),
+    ).then((value) async {
+      ChatMessage? lastMessage = messages.firstOrNull;
+      if (lastMessage != null && lastMessage.user == geminiUser) {
+        lastMessage = messages.removeAt(0);
+        String response = value?.output ?? '';
+        lastMessage.text += response.trim();
+        setState(() {
+          messages = [lastMessage!, ...messages];
+        });
+      } else {
+        String response = value?.output ?? '';
+        ChatMessage message = ChatMessage(
+          user: geminiUser,
+          createdAt: DateTime.now(),
+          text: response.trim(),
+        );
+        setState(() {
+          messages = [message, ...messages];
+        });
+      }
+      await _saveMessage(messages);
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future _saveMessage(List<ChatMessage> messages) async {
     await allRemovePrefs();
     List<Map<String, dynamic>> dataList = [];
     for (final message in messages) {
@@ -45,67 +90,15 @@ class _HomeScreenState extends State<HomeScreen> {
     await setPrefsString('chatList', jsonString);
   }
 
-  Future _loadPrefs() async {
-    List<ChatMessage> tmpMessages = [];
-    final jsonString = await getPrefsString('chatList');
-    if (jsonString != null) {
-      List<dynamic> decodedList = jsonDecode(jsonString);
-      for (final data in decodedList) {
-        ChatMessage tmpMessage = ChatMessage.fromJson(data);
-        tmpMessages.add(tmpMessage);
-      }
-    }
-    setState(() {
-      messages = tmpMessages;
-    });
-  }
-
-  void _sendMessage(ChatMessage chatMessage) {
-    setState(() {
-      messages = [chatMessage, ...messages];
-    });
-    try {
-      String question = '一文で簡潔に、田舎のお母さんのような言葉で答えてください：${chatMessage.text}';
-      gemini.promptStream(
-        parts: [Part.text(question)],
-        generationConfig: GenerationConfig(
-          maxOutputTokens: 30,
-        ),
-      ).listen((value) async {
-        ChatMessage? lastMessage = messages.firstOrNull;
-        if (lastMessage != null && lastMessage.user == geminiUser) {
-          lastMessage = messages.removeAt(0);
-          String response = value?.output ?? '';
-          lastMessage.text += response.trim();
-          setState(() {
-            messages = [lastMessage!, ...messages];
-          });
-        } else {
-          String response = value?.output ?? '';
-          ChatMessage message = ChatMessage(
-            user: geminiUser,
-            createdAt: DateTime.now(),
-            text: response.trim(),
-          );
-          setState(() {
-            messages = [message, ...messages];
-          });
-        }
-        await _savePrefs(messages);
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void _init() async {
-    await _loadPrefs();
+  void _initBannerAd() async {
+    await bannerAd.load();
   }
 
   @override
   void initState() {
     _initBannerAd();
     super.initState();
+    _loadMessage();
   }
 
   @override
@@ -131,13 +124,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          bannerAd.responseInfo != null
-              ? SizedBox(
-                  width: bannerAd.size.width.toDouble(),
-                  height: bannerAd.size.height.toDouble(),
-                  child: AdWidget(ad: bannerAd),
-                )
-              : Container(),
+          SizedBox(
+            width: bannerAd.size.width.toDouble(),
+            height: bannerAd.size.height.toDouble(),
+            child: AdWidget(ad: bannerAd),
+          ),
           Expanded(
             child: DashChat(
               currentUser: currentUser,
@@ -163,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               messageOptions: MessageOptions(
                 showOtherUsersName: false,
-                currentUserContainerColor: kMainColor,
+                currentUserContainerColor: kMainColor.withOpacity(0.5),
                 borderRadius: 16,
                 messageTextBuilder: (current, prev, next) {
                   return Text(
