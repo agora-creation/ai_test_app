@@ -48,32 +48,22 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       messages = [chatMessage, ...messages];
     });
-    String question = '一文で簡潔に、田舎のお母さんのような言葉で答えてください：${chatMessage.text}';
+    String question = '一文で簡潔に、お母さん風の言葉で答えてください：${chatMessage.text}';
     gemini.prompt(
       parts: [Part.text(question)],
       generationConfig: GenerationConfig(
         maxOutputTokens: 30,
       ),
     ).then((value) async {
-      ChatMessage? lastMessage = messages.firstOrNull;
-      if (lastMessage != null && lastMessage.user == geminiUser) {
-        lastMessage = messages.removeAt(0);
-        String response = value?.output ?? '';
-        lastMessage.text += response.trim();
-        setState(() {
-          messages = [lastMessage!, ...messages];
-        });
-      } else {
-        String response = value?.output ?? '';
-        ChatMessage message = ChatMessage(
-          user: geminiUser,
-          createdAt: DateTime.now(),
-          text: response.trim(),
-        );
-        setState(() {
-          messages = [message, ...messages];
-        });
-      }
+      String response = value?.output ?? '';
+      ChatMessage message = ChatMessage(
+        user: geminiUser,
+        createdAt: DateTime.now(),
+        text: response.trim(),
+      );
+      setState(() {
+        messages = [message, ...messages];
+      });
       await _saveMessage(messages);
     }).catchError((e) {
       print(e);
@@ -109,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isAdView = false;
     return Scaffold(
       appBar: AppBar(
         title: Text('お母さん'),
@@ -124,11 +115,13 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            width: bannerAd.size.width.toDouble(),
-            height: bannerAd.size.height.toDouble(),
-            child: AdWidget(ad: bannerAd),
-          ),
+          isAdView
+              ? SizedBox(
+                  width: bannerAd.size.width.toDouble(),
+                  height: bannerAd.size.height.toDouble(),
+                  child: AdWidget(ad: bannerAd),
+                )
+              : Container(),
           Expanded(
             child: DashChat(
               currentUser: currentUser,
