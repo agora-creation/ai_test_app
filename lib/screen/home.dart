@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -99,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    bool isAdView = false;
+    bool isAdView = true;
     return Scaffold(
       appBar: AppBar(
         title: Text('お母さん'),
@@ -150,13 +151,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 currentUserContainerColor: kMainColor.withOpacity(0.5),
                 borderRadius: 16,
                 messageTextBuilder: (current, prev, next) {
-                  return Text(
-                    current.text,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'TekitouPoem_Bold',
-                    ),
+                  return Column(
+                    children: [
+                      Text(
+                        current.text,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'TekitouPoem_Bold',
+                        ),
+                      ),
+                      current.user == geminiUser
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    if (!await launchUrl(Uri.parse(
+                                      'https://docs.google.com/forms/d/e/1FAIpQLSeuIKiu744zTtBHJTwe4Zz_VIXOFLv5ajpupVjtEUGf-OadWQ/viewform?usp=pp_url&entry.1573471686=${current.text}',
+                                    ))) {
+                                      throw Exception('Could not launch');
+                                    }
+                                  },
+                                  child: FaIcon(
+                                    FontAwesomeIcons.solidFlag,
+                                    size: 18,
+                                    color: kMainColor,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                    ],
                   );
                 },
               ),
